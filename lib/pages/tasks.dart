@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/main.dart';
+import 'package:todo_app/screens/task_editor.dart';
 
 class TasksPage extends StatefulWidget {
   TasksPage({super.key, this.setFAB});
@@ -13,37 +14,39 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> {
   late TextEditingController _textEditingController;
   String _filterText = "";
-  FloatingActionButton fabTasks = FloatingActionButton(
-      tooltip: "Create new Task...",
-      child: LayoutBuilder(
-        builder: (context, constraints) => Stack(
-          children: [
-            Positioned(
-                top: constraints.constrainHeight() / 2 - 14,
-                left: constraints.constrainWidth() / 2 - 14,
-                child: const Icon(
-                  Icons.task,
-                  size: 24,
-                )),
-            Positioned(
-                top: constraints.constrainHeight() / 2 - 2,
-                left: constraints.constrainWidth() / 2 - 2,
-                child: const Icon(
-                  Icons.add,
-                  size: 24,
-                ))
-          ],
-        ),
-      ),
-      onPressed: () {
-        print("new task!");
-      });
+  FloatingActionButton fabTasks = FloatingActionButton(onPressed: () {});
 
   @override
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(text: _filterText);
     if (widget.setFAB != null) {
+      fabTasks = FloatingActionButton(
+          tooltip: "Create new Task...",
+          child: LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                Positioned(
+                    top: constraints.constrainHeight() / 2 - 14,
+                    left: constraints.constrainWidth() / 2 - 14,
+                    child: const Icon(
+                      Icons.task,
+                      size: 24,
+                    )),
+                Positioned(
+                    top: constraints.constrainHeight() / 2 - 2,
+                    left: constraints.constrainWidth() / 2 - 2,
+                    child: const Icon(
+                      Icons.add,
+                      size: 24,
+                    ))
+              ],
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context)
+                .push((MaterialPageRoute(builder: (_) => TaskEditorScreen())));
+          });
       Future.delayed(const Duration(milliseconds: 5), () {
         widget.setFAB!(fabTasks);
       });

@@ -1,5 +1,35 @@
 import 'package:todo_app/models/tag.dart';
 
+enum TaskPriority {
+  NONE,
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+  G,
+  H,
+  I,
+  J,
+  K,
+  L,
+  M,
+  N,
+  O,
+  P,
+  Q,
+  R,
+  S,
+  T,
+  U,
+  V,
+  W,
+  X,
+  Y,
+  Z
+}
+
 class Task {
   bool completed;
   String priority;
