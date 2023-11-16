@@ -1,9 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/todo_file.dart';
 import 'package:todo_app/pages/contexts.dart';
 import 'package:todo_app/pages/projects.dart';
 import 'package:todo_app/pages/tasks.dart';
+import 'package:todo_app/globals.dart' as globals;
+import 'package:todo_app/todo_txt.dart';
+import 'package:todo_app/widgets/drawer.dart';
 
 final globalNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -50,13 +54,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   FloatingActionButton? _fab;
   late TabController _tabController;
   String _currentFile = "Default";
-
-  setFloatingActionButton(FloatingActionButton pFAB) {
-    _fab = pFAB;
-    if (mounted) setState(() {});
-  }
-
   List<Page> _pages = [];
+
+  @override
+  void didChangeDependencies() async {
+    // megnézzük, h. létezik e a mappánk
+  }
 
   @override
   void initState() {
@@ -84,8 +87,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           widget: TasksPage(
             setFAB: setFloatingActionButton,
           ),
-          icon: const Icon(Icons.settings),
-          label: "Settings"),
+          icon: const Icon(Icons.label),
+          label: "Labels"),
     ];
     _tabController = TabController(
       vsync: this,
@@ -94,14 +97,19 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     _tabController.addListener(() {
       _currentPageIndex = _tabController.index;
       if (mounted) setState(() {});
-      print(_tabController.index);
     });
+    globals.createDefaultFile();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  setFloatingActionButton(FloatingActionButton pFAB) {
+    _fab = pFAB;
+    if (mounted) setState(() {});
   }
 
   @override
@@ -139,44 +147,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
-          drawer: Drawer(
-            backgroundColor: currentTheme.colorScheme.background,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: currentTheme.colorScheme.primary,
-                  ),
-                  child: Text(
-                    "Todo",
-                    style: TextStyle(
-                        color: currentTheme.colorScheme.onPrimary,
-                        fontSize: 20),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Files", style: currentTheme.textTheme.bodySmall),
-                ),
-                ListTile(
-                  title: Text("Default"),
-                  onTap: () {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text("New file..."),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: Icon(Icons.edit),
-                  title: Text("Manage files"),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ),
+          drawer: AppDrawer(),
           body: TabBarView(
             controller: _tabController,
             physics: const NeverScrollableScrollPhysics(),
@@ -205,7 +176,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 icon: _pages[2].icon,
                 text: _pages[2].label,
               ),
-              // Settings
+              // Key-Values
               Tab(
                 icon: _pages[3].icon,
                 text: _pages[3].label,

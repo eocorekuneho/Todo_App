@@ -1,4 +1,5 @@
 import 'package:todo_app/models/tag.dart';
+import 'package:todo_app/models/todo_file.dart';
 
 enum TaskPriority {
   NONE,
@@ -32,20 +33,17 @@ enum TaskPriority {
 
 class Task {
   bool completed;
-  String priority;
+  TaskPriority priority;
   DateTime? completedAt;
   DateTime? createdAt;
   String description;
   List<Tag> tags;
 
-  Task(bool needsCreationDate,
+  Task(
       {this.completed = false,
-      this.priority = "",
       this.completedAt,
+      this.priority = TaskPriority.NONE,
+      this.createdAt,
       this.description = "",
-      this.tags = const []}) {
-    if (needsCreationDate) {
-      this.createdAt = DateTime.now();
-    }
-  }
+      this.tags = const []}) {}
 }

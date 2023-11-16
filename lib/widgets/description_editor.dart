@@ -17,10 +17,10 @@ class _DescriptionEditorState extends State<DescriptionEditor> {
   Map<RegExp, TextStyle> patternUser = {
     // project
     RegExp(r"\+[a-zA-Z0-9\p{L}\p{M}]+"):
-        const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold),
+        const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
     // context
     RegExp(r"\B@[a-zA-Z0-9\p{L}\p{M}]+"):
-        const TextStyle(color: Colors.green, fontStyle: FontStyle.italic)
+        const TextStyle(fontStyle: FontStyle.italic)
   };
 
   @override
@@ -76,8 +76,10 @@ class _DescriptionEditorState extends State<DescriptionEditor> {
                 controller: _textEditingController,
                 expands: true,
                 maxLines: null,
-                decoration: const InputDecoration(
-                  fillColor: Colors.white,
+                decoration: InputDecoration(
+                  // TODO: ez a szín
+                  fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                  hoverColor: Theme.of(context).colorScheme.onSurfaceVariant,
                   filled: true,
                 ),
               ),

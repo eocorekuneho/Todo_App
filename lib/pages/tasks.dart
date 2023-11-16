@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/main.dart';
+import 'package:todo_app/lists/task_list.dart';
+import 'package:todo_app/models/todo_file.dart';
 import 'package:todo_app/screens/task_editor.dart';
+import 'package:todo_app/globals.dart' as globals;
 
 class TasksPage extends StatefulWidget {
   TasksPage({super.key, this.setFAB});
@@ -55,34 +57,42 @@ class _TasksPageState extends State<TasksPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                  child: TextField(
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.only(
-                              left: 15, bottom: 11, top: 11, right: 15),
-                          hintText:
-                              "Search Tasks (in description, +Project or @context)..."),
-                      controller: _textEditingController)),
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.account_tree),
-                  tooltip: "Select Project..."),
-              IconButton(
+    return Column(children: <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+                child: TextField(
+                    decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                            left: 15, bottom: 11, top: 11, right: 15),
+                        hintText:
+                            "Search Tasks (in description, +Project or @context)..."),
+                    controller: _textEditingController)),
+            IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.alternate_email),
-                tooltip: "Select Context...",
-              )
-            ],
-          ),
+                icon: Icon(Icons.account_tree),
+                tooltip: "Select Project..."),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.alternate_email),
+              tooltip: "Select Context...",
+            )
+          ],
         ),
-        Expanded(child: ListView()),
-      ],
-    );
+      ),
+      Expanded(
+          child: ValueListenableBuilder<TodoFile?>(
+        valueListenable: globals.getCurrentFile,
+        builder: (context, value, child) {
+          if (value == null) {
+            return Center(child: CircularProgressIndicator());
+          }
+          print(value);
+          return TaskList(file: value);
+        },
+      )),
+    ]);
   }
 }
