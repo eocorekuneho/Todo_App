@@ -58,18 +58,18 @@ void getFiles() async {
     for (String path in filePaths) {
       TodoFile todoFile = TodoFile(
           fileName: path, displayedName: path, icon: const Icon(Icons.note));
-      todoFile.createFile();
+      await todoFile.createFile();
       loadedFiles.add(todoFile);
     }
   }
 }
 
-void createDefaultFile() {
+void createDefaultFile() async {
   var todo = TodoFile(
       displayedName: "Default",
       fileName: "default.txt",
       icon: const Icon(Icons.home));
-  todo.createFile();
+  await todo.createFile();
   loadedFiles.add(todo);
   currentFileNotifier.value = loadedFiles.last;
 }

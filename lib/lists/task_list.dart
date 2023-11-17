@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/globals.dart' as globals;
+import 'package:todo_app/lists/task_card.dart';
 import 'package:todo_app/models/todo_file.dart';
 
 class TaskList extends StatefulWidget {
@@ -18,9 +19,12 @@ class _TaskListState extends State<TaskList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        children: widget.file.tasks
-            .map((e) => ListTile(title: Text(e.description)))
-            .toList());
+    return ListView.separated(
+        itemCount: widget.file.tasks.length,
+        separatorBuilder: (BuildContext context, int index) =>
+            Divider(height: 1),
+        itemBuilder: (BuildContext context, int index) {
+          return TaskCard(task: widget.file.tasks[index]);
+        });
   }
 }
