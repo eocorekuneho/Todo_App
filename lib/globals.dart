@@ -23,7 +23,7 @@ Future<String?> fRead(String pFileName, {String pPath = todoFilePath}) async {
     log("${directory.path}$pPath/$pFileName loaded successfully.",
         name: "globals.fRead");
   } catch (e) {
-    //log("Error reading file: $pFileName. $e", name: "globals.fRead", error: e);
+    log("Error reading file: $pFileName. $e", name: "globals.fRead", error: e);
     text = null;
   }
   return text;

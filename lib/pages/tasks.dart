@@ -15,6 +15,7 @@ class TasksPage extends StatefulWidget {
 }
 
 class _TasksPageState extends State<TasksPage> {
+  late TodoFile _currentFile;
   late TextEditingController _textEditingController;
   String _filterText = "";
   FloatingActionButton fabTasks = FloatingActionButton(onPressed: () {});
@@ -48,14 +49,26 @@ class _TasksPageState extends State<TasksPage> {
               ],
             ),
           ),
-          onPressed: () {
-            Navigator.of(context)
-                .push((MaterialPageRoute(builder: (_) => TaskEditorScreen())));
+          onPressed: () async {
+            Task newTask = Task();
+            bool taskOk = await newTask.edit(context);
+            if (taskOk) {
+              _currentFile.tasks.add(newTask);
+              await _currentFile.update();
+              if (mounted) setState(() {});
+              globals.currentFileNotifier.value = _currentFile;
+            }
           });
       Future.delayed(const Duration(milliseconds: 5), () {
         widget.setFAB!(fabTasks);
       });
     }
+  }
+
+  _taskOnTap(Task pTask) {
+    print(pTask.description);
+    Navigator.of(context).push(
+        (MaterialPageRoute(builder: (_) => TaskEditorScreen(task: pTask))));
   }
 
   @override
@@ -67,47 +80,50 @@ class _TasksPageState extends State<TasksPage> {
         ? Theme.of(context).colorScheme.primary
         : Theme.of(context).colorScheme.background;
     return Column(children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-        child: Row(
-          children: [
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                backgroundColor: filter_bg_color,
-                minimumSize: Size(36, 36),
-                shape: CircleBorder(),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              onPressed: () {
-                listFiltered = !listFiltered;
-                showFilterWarning = listFiltered;
-                if (mounted) setState(() {});
-              },
-              child: Icon(Icons.filter_list, color: filter_fore_color),
-              //tooltip: "Sorty/Filter by Priority...",
-            ),
-            Expanded(
-                child: TextFormField(
-                    decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.only(left: 8, right: 8),
-                        hintText:
-                            "Search Tasks (in description, +Project or @context)..."),
-                    controller: _textEditingController)),
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.account_tree),
-                    tooltip: "Select Project..."),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.alternate_email),
-                  tooltip: "Select Context...",
+      Container(
+        color: Theme.of(context).colorScheme.background,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          child: Row(
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  backgroundColor: filter_bg_color,
+                  minimumSize: Size(36, 36),
+                  shape: CircleBorder(),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-              ],
-            )
-          ],
+                onPressed: () {
+                  listFiltered = !listFiltered;
+                  showFilterWarning = listFiltered;
+                  if (mounted) setState(() {});
+                },
+                child: Icon(Icons.filter_list, color: filter_fore_color),
+                //tooltip: "Sorty/Filter by Priority...",
+              ),
+              Expanded(
+                  child: TextFormField(
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 8, right: 8),
+                          hintText:
+                              "Search Tasks (in description, +Project or @context)..."),
+                      controller: _textEditingController)),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.account_tree),
+                      tooltip: "Select Project..."),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.alternate_email),
+                    tooltip: "Select Context...",
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
       if (showFilterWarning)
@@ -153,11 +169,12 @@ class _TasksPageState extends State<TasksPage> {
           child: ValueListenableBuilder<TodoFile?>(
         valueListenable: globals.getCurrentFile,
         builder: (context, value, child) {
-          print(value);
           if (value == null) {
             return Center(child: CircularProgressIndicator());
           }
-          return TaskList(file: globals.getCurrentFile.value!);
+          _currentFile = value;
+
+          return TaskList(file: _currentFile, cbTaskOnTap: _taskOnTap);
         },
       )),
     ]);

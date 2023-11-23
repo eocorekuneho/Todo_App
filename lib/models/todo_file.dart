@@ -12,7 +12,9 @@ class TodoFile {
   Icon icon;
   bool _ready = false;
 
-  List<Task> tasks = [];
+  TaskListNotifier tasks = TaskListNotifier();
+
+  //List<Task> tasks = [];
   List<Tag> projects = [];
   List<Tag> contexts = [];
 
@@ -87,10 +89,87 @@ class TodoFile {
     }
   }
 
+  String getFileHeader() {
+    return "// created with TodoApp";
+  }
+
+  Future<void> saveFile() async {
+    String output = getFileHeader();
+    for (Task t in tasks.tasks.value) {
+      output += "\r\n";
+      String taskLine = "";
+      if (t.completed) {
+        taskLine += "x ";
+      }
+      if (t.priority != TaskPriority.NONE) {
+        taskLine += "(${t.priority.name}) ";
+      }
+      if (t.completedAt != null) {
+        taskLine += "${t.completedAt.toString().substring(0, 10)} ";
+      }
+      if (t.createdAt != null) {
+        taskLine += "${t.createdAt.toString().substring(0, 10)} ";
+      }
+      taskLine += t.description;
+
+      output += taskLine;
+    }
+    await globals.fWrite(fileName, output);
+  }
+
   String? getContents() {
     if (this._ready)
       return _contents;
     else
       return null;
+  }
+
+  Future<void> update() async {
+    await saveFile();
+  }
+}
+
+class TaskListNotifier {
+  final ValueNotifier<List<Task>> tasks = ValueNotifier<List<Task>>([]);
+
+  void setTaskList(List<Task> pTaskList) {
+    tasks.value = pTaskList;
+  }
+
+  void updateAt(int index, Task pTask) {
+    List<Task> tVal = tasks.value;
+    tVal[index] = pTask;
+    tasks.value = tVal;
+  }
+
+  void add(Task pTask) {
+    List<Task> tVal = tasks.value;
+    tVal.add(pTask);
+    tasks.value = tVal;
+  }
+
+  void remove(Task pTask) {
+    List<Task> tVal = tasks.value;
+    tVal.remove(pTask);
+    tasks.value = tVal;
+  }
+
+  void removeAt(int pIndex) {
+    List<Task> tVal = tasks.value;
+    tVal.removeAt(pIndex);
+    tasks.value = tVal;
+  }
+
+  void load(List<Task> pTaskList) {
+    List<Task> tVal = tasks.value;
+    tVal.clear();
+    tVal = pTaskList;
+    tasks.value = tVal;
+  }
+
+  void clear() {
+    List<Task> tVal = tasks.value;
+    tVal.clear();
+    tasks.value = tVal;
   }
 }

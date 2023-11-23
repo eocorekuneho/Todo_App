@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -10,10 +11,10 @@ import 'package:todo_app/todo_txt.dart';
 import 'package:todo_app/widgets/drawer.dart';
 
 final globalNavigatorKey = GlobalKey<NavigatorState>();
-
+final appGlobalKey = GlobalKey<_MyAppState>();
 void main() {
   runApp(MyApp(
-    key: GlobalKey(),
+    key: appGlobalKey,
   ));
 }
 
@@ -49,9 +50,19 @@ class MyApp extends StatefulWidget {
   }
 }
 
+class GlobalFAB {
+  final ValueNotifier<FloatingActionButton> fab =
+      ValueNotifier<FloatingActionButton>(
+          FloatingActionButton(onPressed: null));
+
+  void setFAB(FloatingActionButton pFAB) {
+    fab.value = pFAB;
+  }
+}
+
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   int _currentPageIndex = 0;
-  FloatingActionButton? _fab;
+  final GlobalFAB _fab = GlobalFAB();
   late TabController _tabController;
   String _currentFile = "Default";
   List<Page> _pages = [];
@@ -108,7 +119,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   setFloatingActionButton(FloatingActionButton pFAB) {
-    _fab = pFAB;
+    //_fab = pFAB;
+    _fab.setFAB(pFAB);
     if (mounted) setState(() {});
   }
 
@@ -158,32 +170,40 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               _pages[3].widget,
             ],
           ),
-          bottomNavigationBar: TabBar(
-            controller: _tabController,
-            tabs: [
-              // Tasks
-              Tab(
-                icon: _pages[0].icon,
-                text: _pages[0].label,
-              ),
-              // Projects
-              Tab(
-                icon: _pages[1].icon,
-                text: _pages[1].label,
-              ),
-              // Contexts
-              Tab(
-                icon: _pages[2].icon,
-                text: _pages[2].label,
-              ),
-              // Key-Values
-              Tab(
-                icon: _pages[3].icon,
-                text: _pages[3].label,
-              )
-            ],
+          bottomNavigationBar: Container(
+            color: currentTheme.colorScheme.background,
+            child: TabBar(
+              controller: _tabController,
+              tabs: [
+                // Tasks
+                Tab(
+                  icon: _pages[0].icon,
+                  text: _pages[0].label,
+                ),
+                // Projects
+                Tab(
+                  icon: _pages[1].icon,
+                  text: _pages[1].label,
+                ),
+                // Contexts
+                Tab(
+                  icon: _pages[2].icon,
+                  text: _pages[2].label,
+                ),
+                // Key-Values
+                Tab(
+                  icon: _pages[3].icon,
+                  text: _pages[3].label,
+                )
+              ],
+            ),
           ),
-          floatingActionButton: _fab,
+          floatingActionButton: ValueListenableBuilder(
+            valueListenable: _fab.fab,
+            builder: (context, value, child) {
+              return value;
+            },
+          ),
         ));
   }
 }

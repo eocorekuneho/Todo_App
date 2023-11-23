@@ -16,13 +16,59 @@ class TodoTxt {
   static List<Map<String, dynamic>> parseContents(String pContent) {
     List<Map<String, dynamic>> retval = [];
     for (String line in pContent.split(LINE_ENDING)) {
-      print("parsing line: $line");
+      line.trim();
+      if (line == "") continue;
+      //print("parsing line: $line");
       if (line.startsWith("//")) {
-        print("it's comment, no parsing");
+        //print("it's comment, no parsing");
         continue;
       }
       var parsed = parseLine(line);
       retval.add(parsed);
+    }
+    return retval;
+  }
+
+  static Map<String, dynamic> parseDescription(String pDescription) {
+    Map<String, dynamic> retval = {
+      "content": "",
+      "projects": [],
+      "contexts": [],
+      "keyvalues": {},
+    };
+    String content = "";
+    for (String word in pDescription.split(FIELD_SEPARATOR)) {
+      // Key-Values
+      {
+        RegExp search = RegExp(REGEX_KEYVALUE, unicode: true);
+        if (search.hasMatch(word)) {
+          var match = search.firstMatch(word);
+          if (match?.group(1) != null && match?.group(2) != null) {
+            (retval['keyvalues'] as Map)
+                .addEntries([MapEntry(match!.group(1)!, match.group(2)!)]);
+          }
+          //continue;
+        }
+      }
+
+      // Content
+      retval['content'] += "$word ";
+
+      // Projects
+      {
+        RegExp search = RegExp(REGEX_PROJECT, unicode: true);
+        if (search.hasMatch(word)) {
+          (retval['projects'] as List).add(search.firstMatch(word)!.group(0));
+        }
+      }
+
+      // Contexts
+      {
+        RegExp search = RegExp(REGEX_CONTEXT, unicode: true);
+        if (search.hasMatch(word)) {
+          (retval['contexts'] as List).add(search.firstMatch(word)!.group(0));
+        }
+      }
     }
     return retval;
   }
@@ -47,7 +93,7 @@ class TodoTxt {
 
     for (String word in pLine.split(FIELD_SEPARATOR)) {
       wIndex++;
-      print("\t$wIndex, $word");
+      //print("\t$wIndex, $word");
       if (wIndex == 0) {
         // check if it's done
         if (word == LPREFIX_DONE) {
@@ -75,7 +121,7 @@ class TodoTxt {
             (retval['keyvalues'] as Map)
                 .addEntries([MapEntry(match!.group(1)!, match.group(2)!)]);
           }
-          continue;
+          //continue;
         }
       }
 
@@ -123,7 +169,7 @@ class TodoTxt {
     } else if (date1 != null && date2 == null) {
       retval['createdAt'] = date1;
     }
-    print(retval);
+
     return retval;
   }
 }
