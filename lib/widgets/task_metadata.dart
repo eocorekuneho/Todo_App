@@ -179,70 +179,111 @@ class _TaskMetadata extends State<TaskMetadata> {
                         const Divider(height: 12),
                         const SizedBox(height: 15),
                         // Created at
-                        TextFormField(
-                          controller: controllerDateCreated,
-                          onTap: () async {
-                            FocusScope.of(context)
-                                .requestFocus(new FocusNode());
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: dateCreated ?? DateTime.now(),
-                                firstDate: DateTime(1950),
-                                //DateTime.now() - not to allow to choose before today.
-                                lastDate: DateTime(2199));
-                            setSheetState(() {
-                              dateCreated = pickedDate;
-                              controllerDateCreated.text =
-                                  pickedDate.toString().substring(0, 10);
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            label: Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Icon(Icons.date_range),
-                                Text("Creation date"),
-                              ],
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: controllerDateCreated,
+                                onTap: () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(new FocusNode());
+                                  DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          dateCreated ?? DateTime.now(),
+                                      firstDate: DateTime(1950),
+                                      //DateTime.now() - not to allow to choose before today.
+                                      lastDate: DateTime(2199));
+                                  setSheetState(() {
+                                    if (pickedDate != null) {
+                                      dateCreated = pickedDate;
+                                      controllerDateCreated.text = pickedDate
+                                          .toString()
+                                          .substring(0, 10);
+                                    }
+                                  });
+                                },
+                                decoration: const InputDecoration(
+                                  label: Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      Icon(Icons.date_range),
+                                      Text("Creation date"),
+                                    ],
+                                  ),
+                                  fillColor: Colors.transparent,
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(),
+                                  ),
+                                ),
+                              ),
                             ),
-                            fillColor: Colors.transparent,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(),
+                            IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                setSheetState(() {
+                                  dateCreated = null;
+                                  controllerDateCreated.text = "";
+                                });
+                              },
                             ),
-                          ),
+                          ],
                         ),
                         if (isCompleted) ...[
                           const SizedBox(height: 15),
                           // Completed at
-                          TextFormField(
-                            controller: controllerDateCompleted,
-                            onTap: () async {
-                              FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
-                              DateTime? pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: dateCompleted ?? DateTime.now(),
-                                  firstDate: DateTime(1950),
-                                  //DateTime.now() - not to allow to choose before today.
-                                  lastDate: DateTime(2199));
-                              setSheetState(() {
-                                dateCompleted = pickedDate;
-                                controllerDateCompleted.text =
-                                    pickedDate.toString().substring(0, 10);
-                              });
-                            },
-                            decoration: const InputDecoration(
-                              label: Wrap(
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Icon(Icons.date_range),
-                                  Text("Completion date"),
-                                ],
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: controllerDateCompleted,
+                                  onTap: () async {
+                                    FocusScope.of(context)
+                                        .requestFocus(new FocusNode());
+                                    DateTime? pickedDate = await showDatePicker(
+                                        context: context,
+                                        initialDate:
+                                            dateCompleted ?? DateTime.now(),
+                                        firstDate: DateTime(1950),
+                                        //DateTime.now() - not to allow to choose before today.
+                                        lastDate: DateTime(2199));
+                                    setSheetState(() {
+                                      if (pickedDate != null) {
+                                        dateCompleted = pickedDate;
+                                        controllerDateCompleted.text =
+                                            pickedDate
+                                                .toString()
+                                                .substring(0, 10);
+                                      }
+                                    });
+                                  },
+                                  decoration: const InputDecoration(
+                                    label: Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      children: [
+                                        Icon(Icons.date_range),
+                                        Text("Completion date"),
+                                      ],
+                                    ),
+                                    fillColor: Colors.transparent,
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              fillColor: Colors.transparent,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(),
+                              IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  setSheetState(() {
+                                    dateCompleted = null;
+                                    controllerDateCompleted.text = "";
+                                  });
+                                },
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ],

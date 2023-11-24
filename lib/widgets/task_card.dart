@@ -42,7 +42,32 @@ class _TaskCardState extends State<TaskCard> {
         style: TextStyle().merge(taskTextStyle),
       ),
       subtitle: projects.isNotEmpty
-          ? Text(projects.map((e) => e.name).toList().join(", "))
+          ? Wrap(
+              spacing: 5,
+              runSpacing: 5,
+              alignment: WrapAlignment.start,
+              children: [
+                  ...projects
+                      .sublist(0, (5 < projects.length ? 5 : projects.length))
+                      .map((e) => Chip(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            backgroundColor: backgroundColor,
+                            labelStyle: TextStyle(color: taskTextStyle.color),
+                            label: Text(e.name),
+                            padding: EdgeInsets.all(0),
+                          ))
+                      .toList(),
+                  if (projects.length > 5) ...[
+                    Chip(
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      backgroundColor: backgroundColor,
+                      labelStyle: TextStyle(color: taskTextStyle.color),
+                      label: Text("+${projects.length - 5} more..."),
+                      padding: EdgeInsets.all(0),
+                    )
+                  ]
+                ])
           : null,
       leading: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
