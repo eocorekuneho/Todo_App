@@ -1,13 +1,10 @@
-import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:todo_app/models/todo_file.dart';
 import 'package:todo_app/pages/contexts.dart';
 import 'package:todo_app/pages/projects.dart';
 import 'package:todo_app/pages/tasks.dart';
 import 'package:todo_app/globals.dart' as globals;
-import 'package:todo_app/todo_txt.dart';
 import 'package:todo_app/widgets/drawer.dart';
 
 final globalNavigatorKey = GlobalKey<NavigatorState>();

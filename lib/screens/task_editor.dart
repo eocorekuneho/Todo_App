@@ -80,7 +80,8 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
                 onDoubleTap: _readOnly ? _enterEditorMode : null,
                 child: DescriptionEditor(
                   editorFocusNode: _taskEditorFocusNode,
-                  initialDescription: widget.task.description,
+                  initialDescription:
+                      widget.task.description.replaceAll("\\n", "\n"),
                   onDescriptionChanged: _updateDescription,
                   readOnly: _readOnly,
                 ),
@@ -120,7 +121,7 @@ class _TaskEditorScreenState extends State<TaskEditorScreen> {
   }
 
   _updateDescription(String pDescription) {
-    widget.task.description = pDescription;
+    widget.task.description = pDescription.replaceAll("\n", "\\n");
   }
 
   _saveTask({bool popView = true}) async {

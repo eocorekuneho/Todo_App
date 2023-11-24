@@ -14,28 +14,15 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  //List<Task> _taskList = [];
-
   _loadTasks(TodoFile pFile) {
-    /*
-    for (Task t in pFile.tasks.taskList.value) {
-      _taskList.add(t);
-    }
-    */
     if (mounted) setState(() {});
   }
 
-  _showTask(int pTaskIndex) async {
-    bool result = await widget.file.tasks.tasks.value[pTaskIndex].show(context);
+  _showEditTask(int pTaskIndex) async {
+    Task tempTask = Task().copyFrom(widget.file.tasks.tasks.value[pTaskIndex]);
+    bool result = await tempTask.show(context);
     if (result == true) {
-      await widget.file.update();
-    }
-    if (mounted) setState(() {});
-  }
-
-  _editTask(int pTaskIndex) async {
-    bool result = await widget.file.tasks.tasks.value[pTaskIndex].edit(context);
-    if (result == true) {
+      widget.file.tasks.tasks.value[pTaskIndex] = tempTask;
       await widget.file.update();
     }
     if (mounted) setState(() {});
@@ -59,7 +46,7 @@ class _TaskListState extends State<TaskList> {
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
                   onTap: () {
-                    _showTask(index);
+                    _showEditTask(index);
                   },
                   child: TaskCard(task: value[index]));
             });

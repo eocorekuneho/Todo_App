@@ -38,7 +38,7 @@ class _TaskCardState extends State<TaskCard> {
       tileColor: backgroundColor,
       textColor: foregroundColor,
       title: Text(
-        widget.task.description,
+        widget.task.description.replaceAll("\\n", "\n"),
         style: TextStyle().merge(taskTextStyle),
       ),
       subtitle: projects.isNotEmpty

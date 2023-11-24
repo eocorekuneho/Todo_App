@@ -40,9 +40,14 @@ class _TaskMetadata extends State<TaskMetadata> {
     TaskPriority taskPriority = _priority;
     DateTime? dateCompleted = _completedAt;
     DateTime? dateCreated = _createdAt;
-    String crDate =
+    String dateCreatedText =
         _createdAt != null ? _createdAt.toString().substring(0, 10) : "";
-    TextEditingController contr = TextEditingController(text: crDate);
+    TextEditingController controllerDateCreated =
+        TextEditingController(text: dateCreatedText);
+    String dateCompletedText =
+        _completedAt != null ? _completedAt.toString().substring(0, 10) : "";
+    TextEditingController controllerDateCompleted =
+        TextEditingController(text: dateCompletedText);
     return showModalBottomSheet(
       context: context,
       isDismissible: false,
@@ -70,7 +75,7 @@ class _TaskMetadata extends State<TaskMetadata> {
                             child: const Text("CANCEL")),
                         TextButton(
                             onPressed: () {
-                              setSheetState(() {
+                              setState(() {
                                 _completed = isCompleted;
                                 _completedAt = dateCompleted;
                                 _createdAt = dateCreated;
@@ -175,7 +180,7 @@ class _TaskMetadata extends State<TaskMetadata> {
                         const SizedBox(height: 15),
                         // Created at
                         TextFormField(
-                          controller: contr,
+                          controller: controllerDateCreated,
                           onTap: () async {
                             FocusScope.of(context)
                                 .requestFocus(new FocusNode());
@@ -187,7 +192,7 @@ class _TaskMetadata extends State<TaskMetadata> {
                                 lastDate: DateTime(2199));
                             setSheetState(() {
                               dateCreated = pickedDate;
-                              contr.text =
+                              controllerDateCreated.text =
                                   pickedDate.toString().substring(0, 10);
                             });
                           },
@@ -204,7 +209,42 @@ class _TaskMetadata extends State<TaskMetadata> {
                               borderSide: BorderSide(),
                             ),
                           ),
-                        )
+                        ),
+                        if (isCompleted) ...[
+                          const SizedBox(height: 15),
+                          // Completed at
+                          TextFormField(
+                            controller: controllerDateCompleted,
+                            onTap: () async {
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+                              DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: dateCompleted ?? DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  //DateTime.now() - not to allow to choose before today.
+                                  lastDate: DateTime(2199));
+                              setSheetState(() {
+                                dateCompleted = pickedDate;
+                                controllerDateCompleted.text =
+                                    pickedDate.toString().substring(0, 10);
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              label: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                children: [
+                                  Icon(Icons.date_range),
+                                  Text("Completion date"),
+                                ],
+                              ),
+                              fillColor: Colors.transparent,
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -228,8 +268,8 @@ class _TaskMetadata extends State<TaskMetadata> {
     // TODO: nem frissül be dátumállításkor
     return InkWell(
       onTap: (!widget.readOnly)
-          ? () {
-              _metadataDialogBuilder(context);
+          ? () async {
+              await _metadataDialogBuilder(context);
               widget.task.priority = _priority;
               widget.task.createdAt = _createdAt;
               widget.task.completedAt = _completedAt;
