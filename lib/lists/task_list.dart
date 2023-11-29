@@ -19,10 +19,11 @@ class _TaskListState extends State<TaskList> {
   }
 
   _showEditTask(int pTaskIndex) async {
-    Task tempTask = Task().copyFrom(widget.file.tasks.tasks.value[pTaskIndex]);
+    Task tempTask =
+        Task().copyFrom(widget.file.contents.tasks.value[pTaskIndex]);
     bool result = await tempTask.show(context);
     if (result == true) {
-      widget.file.tasks.tasks.value[pTaskIndex] = tempTask;
+      widget.file.contents.tasks.value[pTaskIndex] = tempTask;
       await widget.file.update();
     }
     if (mounted) setState(() {});
@@ -37,7 +38,7 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: widget.file.tasks.tasks,
+      valueListenable: widget.file.contents.tasks,
       builder: (context, value, child) {
         return ListView.separated(
             itemCount: value.length,

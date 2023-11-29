@@ -4,44 +4,20 @@ import 'package:todo_app/lists/tag_list.dart';
 import 'package:todo_app/models/tag.dart';
 import 'package:todo_app/models/todo_file.dart';
 
-class ContextsPage extends StatefulWidget {
-  ContextsPage({super.key, this.setFAB});
-  String title = "Contexts";
+class KeyValuesPage extends StatefulWidget {
+  KeyValuesPage({super.key, this.setFAB});
+  String title = "Labels";
   Function? setFAB;
 
   @override
-  State<ContextsPage> createState() => _ContextsPageState();
+  State<KeyValuesPage> createState() => _KeyValuesPageState();
 }
 
-class _ContextsPageState extends State<ContextsPage> {
+class _KeyValuesPageState extends State<KeyValuesPage> {
   late TodoFile _currentFile;
   late TextEditingController _textEditingController;
   String _filterText = "";
-  FloatingActionButton fabContexts = FloatingActionButton(
-      tooltip: "Add new @context...",
-      child: LayoutBuilder(
-        builder: (context, constraints) => Stack(
-          children: [
-            Positioned(
-                top: constraints.constrainHeight() / 2 - 14,
-                left: constraints.constrainWidth() / 2 - 14,
-                child: const Icon(
-                  Icons.alternate_email,
-                  size: 24,
-                )),
-            Positioned(
-                top: constraints.constrainHeight() / 2 - 2,
-                left: constraints.constrainWidth() / 2 - 2,
-                child: const Icon(
-                  Icons.add,
-                  size: 24,
-                ))
-          ],
-        ),
-      ),
-      onPressed: () {
-        print("new context!");
-      });
+  FloatingActionButton fabKeyValues = FloatingActionButton(onPressed: null);
 
   @override
   void initState() {
@@ -49,7 +25,7 @@ class _ContextsPageState extends State<ContextsPage> {
     _textEditingController = TextEditingController(text: _filterText);
     if (widget.setFAB != null) {
       Future.delayed(const Duration(milliseconds: 5), () {
-        widget.setFAB!(fabContexts);
+        widget.setFAB!(fabKeyValues);
       });
     }
   }
@@ -66,7 +42,7 @@ class _ContextsPageState extends State<ContextsPage> {
                     decoration: const InputDecoration(
                         contentPadding: EdgeInsets.only(
                             left: 15, bottom: 11, top: 11, right: 15),
-                        hintText: "Search @contexts..."),
+                        hintText: "Search Labels..."),
                     controller: _textEditingController))
           ],
         ),
@@ -81,7 +57,7 @@ class _ContextsPageState extends State<ContextsPage> {
           _currentFile = value;
 
           return TagList(
-              file: _currentFile, type: TagType.CONTEXT, cbTaskOnTap: () {});
+              file: _currentFile, type: TagType.KEYVALUE, cbTaskOnTap: () {});
         },
       )),
     ]);

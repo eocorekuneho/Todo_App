@@ -88,7 +88,6 @@ class Task {
 
   void update() {
     Map<String, dynamic> parsedContent = TodoTxt.parseDescription(description);
-    print(parsedContent);
     tags.clear();
     for (String k in parsedContent.keys) {
       if (k == "content") {

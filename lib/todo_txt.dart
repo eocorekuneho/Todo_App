@@ -111,7 +111,7 @@ class TodoTxt {
           continue;
         }
       }
-
+      bool kv = false;
       // Key-Values
       {
         RegExp search = RegExp(REGEX_KEYVALUE, unicode: true);
@@ -121,12 +121,13 @@ class TodoTxt {
             (retval['keyvalues'] as Map)
                 .addEntries([MapEntry(match!.group(1)!, match.group(2)!)]);
           }
+          kv = true;
           //continue;
         }
       }
 
       // Dates
-      {
+      if (!kv) {
         RegExp search = RegExp(REGEX_DATE, unicode: true);
         if (search.hasMatch(word)) {
           if (date1 == null) {

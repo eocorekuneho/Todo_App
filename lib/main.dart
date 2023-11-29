@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/pages/contexts.dart';
+import 'package:todo_app/pages/keyvalues.dart';
 import 'package:todo_app/pages/projects.dart';
 import 'package:todo_app/pages/tasks.dart';
 import 'package:todo_app/globals.dart' as globals;
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String _currentFile = "Default";
   List<Page> _pages = [];
+  bool _showFAB = true;
 
   @override
   void didChangeDependencies() async {
@@ -92,9 +94,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           icon: const Icon(Icons.alternate_email),
           label: "Contexts"),
       Page(
-          widget: TasksPage(
-            setFAB: setFloatingActionButton,
-          ),
+          widget: KeyValuesPage(),
+          showFAB: false,
           icon: const Icon(Icons.label),
           label: "Labels"),
     ];
@@ -103,6 +104,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       length: _pages.length,
     );
     _tabController.addListener(() {
+      _showFAB = _pages[_currentPageIndex].showFAB;
       _currentPageIndex = _tabController.index;
       if (mounted) setState(() {});
     });
@@ -195,12 +197,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
-          floatingActionButton: ValueListenableBuilder(
-            valueListenable: _fab.fab,
-            builder: (context, value, child) {
-              return value;
-            },
-          ),
+          floatingActionButton: Visibility(
+              visible: _showFAB,
+              child: ValueListenableBuilder(
+                valueListenable: _fab.fab,
+                builder: (context, value, child) {
+                  return value;
+                },
+              )),
         ));
   }
 }
@@ -209,10 +213,10 @@ class Page {
   Widget widget;
   String label;
   Icon icon;
-  Function? fabAction;
+  bool showFAB;
   Page(
       {required this.widget,
       required this.label,
       required this.icon,
-      this.fabAction});
+      this.showFAB = true});
 }

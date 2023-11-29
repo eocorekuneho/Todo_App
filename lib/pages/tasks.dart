@@ -53,7 +53,7 @@ class _TasksPageState extends State<TasksPage> {
             Task newTask = Task();
             bool taskOk = await newTask.edit(context);
             if (taskOk) {
-              _currentFile.tasks.add(newTask);
+              _currentFile.contents.taskAdd(newTask);
               await _currentFile.update();
               if (mounted) setState(() {});
               globals.currentFileNotifier.value = _currentFile;
@@ -66,7 +66,6 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   _taskOnTap(Task pTask) {
-    print(pTask.description);
     Navigator.of(context).push(
         (MaterialPageRoute(builder: (_) => TaskEditorScreen(task: pTask))));
   }
