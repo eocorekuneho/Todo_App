@@ -8,7 +8,8 @@ class TodoTxt {
   static const String LPREFIX_DONE = "x";
   static const String REGEX_PROJECT = r"\B\+[a-zA-Z0-9\p{L}\p{M}]+";
   static const String REGEX_CONTEXT = r"\B@[a-zA-Z0-9\p{L}\p{M}]+";
-  static const String REGEX_KEYVALUE = r'(\w+):([^\s]+)';
+  static const String REGEX_KEYVALUE =
+      r'([a-zA-Z0-9_\-\p{L}\p{M}]+):([a-zA-Z0-9_\-\p{L}\p{M}]+)';
   static const String REGEX_DATE =
       r"\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])*";
   static const String REGEX_PRIORITY = r"\([A-Z]\)";

@@ -109,6 +109,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       if (mounted) setState(() {});
     });
     globals.createDefaultFile();
+    setFloatingActionButton(FloatingActionButton(onPressed: () {}));
   }
 
   @override

@@ -31,6 +31,8 @@ class TodoFile {
       _ready = false;
       return false;
     } else {
+      print("ITT ITT ITT");
+      contents.taskClearList();
       contents.projectClearList();
       contents.contextClearList();
       contents.keyvalueClearList();
@@ -133,6 +135,7 @@ class TodoFile {
       output += taskLine;
     }
     await globals.fWrite(fileName, output);
+    await loadFile();
   }
 
   String? getContents() {
@@ -191,9 +194,12 @@ class TodoFileNotifiers {
   }
 
   void taskClearList() {
+    /*
     List<Task> tVal = tasks.value;
     tVal.clear();
     tasks.value = tVal;
+    */
+    tasks.value.clear();
   }
 
   // projects
@@ -210,12 +216,14 @@ class TodoFileNotifiers {
 
   void projectAdd(Tag pTag) {
     List<Tag> tVal = projects.value;
+    if (tVal.where((element) => element.name == pTag.name).isNotEmpty) return;
     tVal.add(pTag);
     projects.value = tVal;
   }
 
   void projectRemove(Tag pTag) {
     List<Tag> tVal = projects.value;
+    if (tVal.where((element) => element.name == pTag.name).isEmpty) return;
     tVal.remove(pTag);
     projects.value = tVal;
   }
@@ -234,9 +242,12 @@ class TodoFileNotifiers {
   }
 
   void projectClearList() {
+    /*
     List<Tag> tVal = projects.value;
     tVal.clear();
     projects.value = tVal;
+    */
+    projects.value.clear();
   }
 
   // contexts
@@ -249,12 +260,14 @@ class TodoFileNotifiers {
 
   void contextAdd(Tag pTag) {
     List<Tag> tVal = contexts.value;
+    if (tVal.where((element) => element.name == pTag.name).isNotEmpty) return;
     tVal.add(pTag);
     contexts.value = tVal;
   }
 
   void contextRemove(Tag pTag) {
     List<Tag> tVal = contexts.value;
+    if (tVal.where((element) => element.name == pTag.name).isEmpty) return;
     tVal.remove(pTag);
     contexts.value = tVal;
   }
@@ -273,9 +286,12 @@ class TodoFileNotifiers {
   }
 
   void contextClearList() {
+    /*
     List<Tag> tVal = contexts.value;
     tVal.clear();
     contexts.value = tVal;
+    */
+    contexts.value.clear();
   }
 
   // keyvalues
@@ -288,12 +304,14 @@ class TodoFileNotifiers {
 
   void keyvalueAdd(Tag pTag) {
     List<Tag> tVal = keyvalues.value;
+    if (tVal.where((element) => element.name == pTag.name).isNotEmpty) return;
     tVal.add(pTag);
     keyvalues.value = tVal;
   }
 
   void keyvalueRemove(Tag pTag) {
     List<Tag> tVal = keyvalues.value;
+    if (tVal.where((element) => element.name == pTag.name).isEmpty) return;
     tVal.remove(pTag);
     keyvalues.value = tVal;
   }
@@ -312,8 +330,11 @@ class TodoFileNotifiers {
   }
 
   void keyvalueClearList() {
+    /*
     List<Tag> tVal = keyvalues.value;
     tVal.clear();
     keyvalues.value = tVal;
+    */
+    keyvalues.value.clear();
   }
 }
